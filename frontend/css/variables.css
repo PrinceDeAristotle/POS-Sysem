@@ -1,0 +1,108 @@
+/**
+ * POS Design Tokens — dark luxury / fintech
+ * Base: deep black & charcoal | Primary accent: bright gold
+ * Secondary: electric blue, neon green, soft orange — no purple
+ */
+
+:root {
+  /* Base & backgrounds */
+  --color-black: #000000;
+  --bg-deep: #0b0b0b;
+  --color-soft-black: #121212;
+  --color-charcoal: #1a1a1a;
+  --color-white: #f5f5f5;
+  --color-off-white: #eaeaea;
+
+  /* Primary accent — bright gold */
+  --color-gold: #f5c542;
+  --color-gold-alt: #e6b800;
+  --color-gold-light: rgba(245, 197, 66, 0.22);
+  --color-gold-border: rgba(245, 197, 66, 0.55);
+  --color-gold-glow: rgba(245, 197, 66, 0.35);
+
+  /* Gradients — CTAs, highlights, charts (not tables) */
+  --grad-gold-primary: linear-gradient(135deg, #f5c542, #e6b800);
+  --grad-gold-glow: radial-gradient(circle, rgba(245, 197, 66, 0.25), transparent 65%);
+  --grad-blue: linear-gradient(135deg, #3abeff, #1e90ff);
+  --grad-green: linear-gradient(135deg, #22c55e, #16a34a);
+  --grad-orange: linear-gradient(135deg, #fb923c, #f97316);
+  --bg-base-vertical: linear-gradient(180deg, #0b0b0b, #121212);
+  --bg-section-blue-corner: radial-gradient(ellipse 90% 70% at 100% 0%, rgba(58, 190, 255, 0.08), transparent 55%);
+
+  /* Secondary accents */
+  --accent-blue: #3abeff;
+  --accent-blue-muted: rgba(58, 190, 255, 0.18);
+  --accent-green: #22c55e;
+  --accent-green-muted: rgba(34, 197, 94, 0.18);
+  --accent-orange: #fb923c;
+  --accent-orange-muted: rgba(251, 146, 60, 0.2);
+  --accent-red: #f87171;
+  --accent-red-muted: rgba(248, 113, 113, 0.15);
+
+  /* Text */
+  --text-primary: #f4f4f5;
+  --text-secondary: #e4e4e7;
+  --text-muted: rgba(244, 244, 245, 0.62);
+  --text-on-gold: #0b0b0b;
+
+  /* Glassmorphism — frosted stack + vivid backdrop (dark luxury) */
+  --glass-saturate: 1.32;
+  --glass-frost-1: rgba(255, 255, 255, 0.12);
+  --glass-panel-fill: rgba(255, 255, 255, 0.05);
+  --glass-frost-3: rgba(4, 4, 7, 0.55);
+  --glass-frost-1-strong: rgba(255, 255, 255, 0.15);
+  --glass-frost-3-strong: rgba(2, 2, 5, 0.68);
+  --glass-bg: rgba(14, 14, 16, 0.42);
+  --glass-bg-strong: rgba(8, 8, 11, 0.52);
+  --glass-highlight: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-border-strong: rgba(255, 255, 255, 0.2);
+  --glass-edge-gradient: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(100, 180, 255, 0.06) 42%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  --glass-blur: 24px;
+  --glass-blur-strong: 48px;
+  --glass-shadow: 0 28px 80px rgba(0, 0, 0, 0.58), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --glass-shadow-gold: 0 14px 52px rgba(245, 197, 66, 0.18);
+  --glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --glass-hover-rim: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 48px rgba(255, 255, 255, 0.04);
+  --shadow-gold-focus: 0 0 0 3px rgba(245, 197, 66, 0.22), 0 0 20px rgba(245, 197, 66, 0.3);
+
+  /* Page atmosphere (subtle — depth without noise) */
+  --bg-glow-1: radial-gradient(900px circle at 12% 0%, rgba(245, 197, 66, 0.06), transparent 58%);
+  --bg-glow-2: radial-gradient(700px circle at 88% 12%, rgba(58, 190, 255, 0.04), transparent 52%);
+  --bg-glow-3: radial-gradient(800px circle at 50% 100%, rgba(245, 197, 66, 0.04), transparent 58%);
+  --bg-gradient-mid: radial-gradient(1000px circle at 50% 45%, rgba(35, 35, 35, 0.35), transparent 68%);
+
+  /* Surfaces */
+  --surface-page: var(--bg-deep);
+  --surface-sidebar: #060606;
+  --surface-sidebar-edge: rgba(245, 197, 66, 0.14);
+  --surface-main: rgba(18, 18, 18, 0.65);
+  --surface-main-highlight: rgba(255, 255, 255, 0.03);
+  --surface-card: var(--glass-bg);
+  --surface-card-border: var(--glass-border);
+  --surface-input: rgba(0, 0, 0, 0.4);
+  --surface-input-border: rgba(255, 255, 255, 0.12);
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --letter-spacing-heading: 0.04em;
+  --letter-spacing-tight: -0.02em;
+
+  /* Spacing & radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 200ms;
+  --duration-normal: 280ms;
+}

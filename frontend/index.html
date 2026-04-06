@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+(function(){try{var t=localStorage.getItem('pos_theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();
+</script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>POS System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:ital,wght@0,600;0,700;0,800;1,700;1,800&display=swap"
+    rel="stylesheet"
+  />
+  <!-- cache-bust to ensure latest CSS loads -->
+  <link rel="stylesheet" href="css/variables.css?v=20260325" />
+  <link rel="stylesheet" href="css/base.css?v=20260325" />
+  <link rel="stylesheet" href="css/login.css?v=20260325" />
+  <link rel="stylesheet" href="css/app.css?v=20260330" />
+  <link rel="stylesheet" href="css/dashboard.css?v=20260402" />
+  <link rel="stylesheet" href="css/theme-light.css?v=20260403" />
+</head>
+<body>
+  <div id="root">
+    <!-- Login screen (shown when not authenticated) -->
+    <div id="login-screen" class="login-screen">
+      <div class="login-glass">
+        <h1 class="login-title">POS System</h1>
+        <p class="login-subtitle">Sign in to continue</p>
+        <p class="login-hint">Default: username <strong>admin</strong>, password <strong>admin123</strong></p>
+        <form id="login-form" class="login-form">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="admin (not your email)" required autocomplete="username" />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="password-wrap">
+              <input type="password" id="password" name="password" placeholder="admin123" required autocomplete="current-password" />
+              <button type="button" id="toggle-password" class="password-toggle" aria-label="Show password" title="Show password">
+                <svg class="icon-eye-open" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="icon-eye-closed" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+          <p id="login-error" class="login-error" role="alert"></p>
+        </form>
+      </div>
+    </div>
+
+    <!-- App shell (shown after login) -->
+    <div id="app-shell" class="app-shell" hidden>
+      <aside class="sidebar">
+        <div class="sidebar-brand">POS</div>
+        <nav>
+          <a href="#pos" class="nav-link active" data-page="pos">
+            <span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h12M6 13h8"/><circle cx="9" cy="17" r="1"/><circle cx="15" cy="17" r="1"/></svg></span>
+            <span class="nav-link-text">Cashier / POS</span>
+          </a>
+          <a href="#products" class="nav-link" data-page="products">
+            <span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
+            <span class="nav-link-text">Products</span>
+          </a>
+          <a href="#customers" class="nav-link" data-page="customers">
+            <span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <span class="nav-link-text">Customers</span>
+          </a>
+          <a href="#sales" class="nav-link" data-page="sales">
+            <span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+            <span class="nav-link-text">Sales History</span>
+          </a>
+          <a href="#inventory" class="nav-link" data-page="inventory">
+            <span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+            <span class="nav-link-text">Inventory</span>
+          </a>
+          <a href="#users" class="nav-link" data-page="users" id="nav-users-link">
+            <span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <span class="nav-link-text">Users</span>
+          </a>
+          <a href="#reports" class="nav-link" data-page="reports">
+            <span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+            <span class="nav-link-text">Reports</span>
+          </a>
+        </nav>
+      </aside>
+      <main class="main-content">
+        <div class="topbar">
+          <button type="button" id="sidebar-toggle" class="icon-btn sidebar-toggle" aria-label="Open menu" title="Menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="topbar-search-wrap glass" role="search">
+            <span class="topbar-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
+            <input type="search" id="global-search" class="topbar-search" placeholder="Search products, sales, customers…" autocomplete="off" />
+          </div>
+          <div class="topbar-trailing">
+            <button type="button" class="icon-btn theme-toggle" id="theme-toggle" title="Switch to light mode" aria-label="Switch to light mode" aria-pressed="false">
+              <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+              <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+            <button type="button" class="icon-btn" id="topbar-notify-btn" title="Notifications" aria-label="Notifications">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </button>
+            <div class="user-chip glass-strong">
+              <span class="user-avatar" id="user-avatar" title="">?</span>
+              <button type="button" id="logout-btn" class="icon-btn" title="Sign out" aria-label="Sign out">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <span id="user-display" class="user-display user-display-inline" hidden></span>
+        <div id="page-pos" class="page">
+          <div class="page-header page-header-rich">
+            <div class="page-header-text">
+              <h2 class="page-title">Point of Sale</h2>
+              <p class="page-subtitle">Ring up sales, apply tax, and take payment — fast checkout for retail.</p>
+            </div>
+          </div>
+          <div class="pos-layout">
+            <aside class="pos-sidebar-overview glass" aria-label="Sales and inventory overview">
+              <div class="pos-chart-card">
+                <h4 class="pos-chart-title">Sales overview</h4>
+                <p class="chart-caption text-muted">Revenue &amp; sale count — last 7 days</p>
+                <div class="pos-chart-wrap pos-chart-wrap--line">
+                  <canvas id="pos-chart-sales" aria-label="Seven day revenue chart"></canvas>
+                </div>
+              </div>
+              <div class="pos-chart-card">
+                <h4 class="pos-chart-title">Stock levels</h4>
+                <p class="chart-caption text-muted">Products by quantity band</p>
+                <div class="pos-chart-wrap pos-chart-wrap--pie">
+                  <canvas id="pos-chart-stock" aria-label="Stock distribution pie chart"></canvas>
+                </div>
+              </div>
+            </aside>
+            <div class="pos-products glass">
+              <div class="form-group">
+                <label for="barcode-input">Barcode / Search</label>
+                <input type="text" id="barcode-input" placeholder="Scan or type barcode / product name" />
+              </div>
+              <div id="product-list" class="product-list"></div>
+            </div>
+            <div class="pos-cart glass">
+              <h3 class="cart-title">Cart</h3>
+              <div id="cart-items" class="cart-items"></div>
+              <div class="cart-summary">
+                <div class="summary-row"><span>Subtotal</span><span id="cart-subtotal">0.00</span></div>
+                <div class="form-group">
+                  <label for="cart-discount">Discount</label>
+                  <input type="number" id="cart-discount" value="0" min="0" step="0.01" />
+                </div>
+                <div class="form-group">
+                  <label for="cart-tax-rate">Tax (VAT %) </label>
+                  <input type="number" id="cart-tax-rate" value="0" min="0" step="0.01" />
+                </div>
+                <div class="summary-row"><span>Tax</span><span id="cart-tax">0.00</span></div>
+                <div class="summary-row total"><span>Total</span><span id="cart-total">0.00</span></div>
+              </div>
+              <div class="payment-methods">
+                <label>Payment</label>
+                <select id="payment-method">
+                  <option value="cash">Cash</option>
+                  <option value="mobile_money">Mobile Money</option>
+                  <option value="card">Card</option>
+                </select>
+              </div>
+              <div id="cash-section" class="cash-section" hidden>
+                <div class="form-group">
+                  <label for="cash-received">Cash received</label>
+                  <input type="number" id="cash-received" value="0" min="0" step="0.01" />
+                </div>
+                <div class="summary-row"><span>Change</span><span id="cash-change">0.00</span></div>
+              </div>
+              <button type="button" id="btn-checkout" class="btn btn-primary btn-block btn-lg">Complete Sale</button>
+            </div>
+          </div>
+        </div>
+        <div id="page-products" class="page" hidden>
+          <div class="page-header page-header-rich">
+            <div class="page-header-text">
+              <h2 class="page-title">Products</h2>
+              <p class="page-subtitle">Manage your product inventory, pricing, categories, and stock levels in one place.</p>
+            </div>
+            <button type="button" id="btn-add-product" class="btn btn-primary btn-add-product-premium">+ Add Product</button>
+          </div>
+          <div class="kpi-grid" id="products-kpi-grid" aria-live="polite">
+            <div class="kpi-card glass kpi-card--gold">
+              <div class="kpi-label">Total products</div>
+              <div class="kpi-value" id="kpi-total-products">—</div>
+            </div>
+            <div class="kpi-card glass kpi-card--orange">
+              <div class="kpi-label">Low stock</div>
+              <div class="kpi-value" id="kpi-low-stock">—</div>
+            </div>
+            <div class="kpi-card glass kpi-card--green">
+              <div class="kpi-label">Revenue today</div>
+              <div class="kpi-value" id="kpi-revenue-today">—</div>
+            </div>
+          </div>
+          <div class="glass table-card-premium">
+            <div id="products-skeleton" class="skeleton-table" hidden>
+              <div class="skeleton-row"><div class="skeleton-cell narrow"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell narrow"></div></div>
+              <div class="skeleton-row"><div class="skeleton-cell narrow"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell narrow"></div></div>
+              <div class="skeleton-row"><div class="skeleton-cell narrow"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell narrow"></div></div>
+            </div>
+            <div class="table-scroll">
+              <table class="data-table data-table-products">
+                <thead>
+                  <tr>
+                    <th><button type="button" class="th-sort" data-sort="product_id" title="Sort by ID">ID<span class="sort-arrows" aria-hidden="true"><span class="up">▲</span><span class="down">▼</span></span></button></th>
+                    <th><button type="button" class="th-sort" data-sort="product_name" title="Sort by name">Name<span class="sort-arrows" aria-hidden="true"><span class="up">▲</span><span class="down">▼</span></span></button></th>
+                    <th><button type="button" class="th-sort" data-sort="category_name" title="Sort by category">Category<span class="sort-arrows" aria-hidden="true"><span class="up">▲</span><span class="down">▼</span></span></button></th>
+                    <th><button type="button" class="th-sort" data-sort="price" title="Sort by price">Price<span class="sort-arrows" aria-hidden="true"><span class="up">▲</span><span class="down">▼</span></span></button></th>
+                    <th><button type="button" class="th-sort" data-sort="quantity" title="Sort by stock">Stock<span class="sort-arrows" aria-hidden="true"><span class="up">▲</span><span class="down">▼</span></span></button></th>
+                    <th><button type="button" class="th-sort" data-sort="barcode" title="Sort by barcode">Barcode<span class="sort-arrows" aria-hidden="true"><span class="up">▲</span><span class="down">▼</span></span></button></th>
+                    <th scope="col" class="th-actions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="products-tbody"></tbody>
+              </table>
+            </div>
+            <div class="table-pagination" id="products-pagination" hidden>
+              <span class="table-pagination-info" id="products-pagination-info"></span>
+              <div class="table-pagination-btns">
+                <button type="button" class="btn-page" id="products-page-prev">Previous</button>
+                <button type="button" class="btn-page" id="products-page-next">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="page-customers" class="page" hidden>
+          <div class="page-header page-header-rich">
+            <div class="page-header-text">
+              <h2 class="page-title">Customers</h2>
+              <p class="page-subtitle">Loyalty, contact details, and purchase history at a glance.</p>
+            </div>
+            <button type="button" id="btn-add-customer" class="btn btn-primary">Add Customer</button>
+          </div>
+          <div class="glass table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>ID</th><th>Name</th><th>Phone</th><th>Email</th><th>Loyalty</th></tr>
+              </thead>
+              <tbody id="customers-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="page-sales" class="page" hidden>
+          <div class="page-header page-header-rich">
+            <div class="page-header-text">
+              <h2 class="page-title">Sales History</h2>
+              <p class="page-subtitle">Review completed transactions, totals, and payment methods.</p>
+            </div>
+          </div>
+          <div class="glass table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Sale ID</th><th>Date</th><th>Cashier</th><th>Total</th><th>Payment</th><th></th></tr>
+              </thead>
+              <tbody id="sales-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="page-inventory" class="page" hidden>
+          <div class="page-header page-header-rich">
+            <div class="page-header-text">
+              <h2 class="page-title">Inventory &amp; Low Stock</h2>
+              <p class="page-subtitle">Monitor alerts and adjust stock levels with a full audit trail.</p>
+            </div>
+          </div>
+          <div class="inventory-grid">
+            <div class="glass card-list">
+              <h3 class="section-title">Low stock alert</h3>
+              <div id="low-stock-list"></div>
+            </div>
+
+            <div class="glass inventory-adjust">
+              <h3 class="section-title">Stock adjustment / Replenishment</h3>
+              <p class="text-muted">Admin/Manager only.</p>
+              <form id="inventory-adjust-form" class="inventory-form">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="inv-product">Product</label>
+                    <select id="inv-product" required></select>
+                    <small class="text-muted">If empty, go to <strong>Products</strong> and add products first.</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="inv-delta">Quantity change</label>
+                    <input type="number" id="inv-delta" step="1" value="1" required />
+                    <small class="text-muted">Use positive numbers to restock, negative to reduce.</small>
+                  </div>
+                  <div class="form-group" style="grid-column: 1 / -1;">
+                    <label for="inv-reason">Reason</label>
+                    <input type="text" id="inv-reason" placeholder="Optional" />
+                  </div>
+                </div>
+                <p id="inv-error" class="form-error" role="alert"></p>
+                <button type="submit" class="btn btn-primary">Apply Adjustment</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div id="page-users" class="page" hidden>
+          <div class="page-header page-header-rich">
+            <div class="page-header-text">
+              <h2 class="page-title">Users &amp; roles</h2>
+              <p class="page-subtitle">Administrators can manage cashier, manager, and admin access.</p>
+            </div>
+            <button type="button" id="btn-add-user" class="btn btn-primary">Add user</button>
+          </div>
+          <p id="users-access-msg" class="text-muted" hidden>Only an <strong>Administrator</strong> can manage users.</p>
+          <div id="users-admin-content" hidden>
+            <div class="user-role-tabs glass" role="tablist">
+              <button type="button" class="role-tab active" data-role-filter="all" role="tab">All</button>
+              <button type="button" class="role-tab" data-role-filter="admin" role="tab">Administrator</button>
+              <button type="button" class="role-tab" data-role-filter="manager" role="tab">Manager</button>
+              <button type="button" class="role-tab" data-role-filter="cashier" role="tab">Cashier</button>
+            </div>
+            <div class="glass table-wrap" style="margin-top: 1rem;">
+              <table class="data-table">
+                <thead>
+                  <tr><th>ID</th><th>Username</th><th>Full name</th><th>Role</th><th></th></tr>
+                </thead>
+                <tbody id="users-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="page-reports" class="page" hidden>
+          <div class="page-header page-header-rich">
+            <div class="page-header-text">
+              <h2 class="page-title">Reports</h2>
+              <p class="page-subtitle">Daily performance, trends, and product mix — data-driven retail insights.</p>
+            </div>
+          </div>
+          <div class="reports-grid">
+            <div class="glass report-card">
+              <h4>Today's Sales</h4>
+              <p id="report-daily-sales">—</p>
+              <p id="report-daily-revenue">—</p>
+            </div>
+            <div class="glass report-card">
+              <h4>Product Performance</h4>
+              <div id="report-product-perf" class="report-list"></div>
+            </div>
+          </div>
+          <div class="reports-charts">
+            <div class="glass report-card report-chart-card">
+              <h4>Revenue trend (last 7 days)</h4>
+              <p class="chart-caption text-muted">Daily revenue from completed sales</p>
+              <div class="chart-wrap">
+                <canvas id="chart-revenue-trend" aria-label="Revenue trend chart"></canvas>
+              </div>
+            </div>
+            <div class="glass report-card report-chart-card">
+              <h4>Top products today</h4>
+              <p class="chart-caption text-muted">By revenue — bar chart</p>
+              <div class="chart-wrap">
+                <canvas id="chart-product-performance" aria-label="Product performance chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="app-confirm-dialog" class="confirm-dialog" aria-labelledby="confirm-dialog-title">
+    <div class="confirm-dialog-inner glass-strong">
+      <h3 id="confirm-dialog-title" class="confirm-dialog-title">Confirm</h3>
+      <p id="confirm-dialog-message" class="confirm-dialog-message"></p>
+      <div class="confirm-dialog-actions">
+        <button type="button" class="btn btn-ghost" id="confirm-dialog-cancel">Cancel</button>
+        <button type="button" class="btn-danger" id="confirm-dialog-ok">Confirm</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Receipt preview modal -->
+  <div id="receipt-modal" class="modal" hidden>
+    <div class="modal-content glass-strong">
+      <div class="receipt" id="receipt-content"></div>
+      <div class="modal-actions">
+        <button type="button" id="receipt-print" class="btn btn-secondary">Print</button>
+        <div class="spacer"></div>
+        <button type="button" id="receipt-close" class="btn btn-primary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product add/edit modal -->
+  <div id="product-modal" class="modal" hidden>
+    <div class="modal-content glass-strong modal-lg modal-premium">
+      <div class="modal-header">
+        <div>
+          <h3 id="product-modal-title" class="modal-title">Add Product</h3>
+          <p id="product-modal-subtitle" class="modal-subtitle">Fields marked with care improve checkout and inventory accuracy.</p>
+        </div>
+        <button type="button" id="product-modal-close" class="btn btn-ghost" aria-label="Close">×</button>
+      </div>
+      <form id="product-form" class="modal-form">
+        <input type="hidden" id="product_id" />
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="product_name">Product Name</label>
+            <input type="text" id="product_name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="category_id">Category</label>
+            <select id="category_id">
+              <option value="">—</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" id="price" min="0" step="0.01" required />
+          </div>
+
+          <div class="form-group">
+            <label for="quantity">Stock available</label>
+            <input type="number" id="quantity" min="0" step="1" required />
+          </div>
+
+          <div class="form-group">
+            <label for="barcode">Barcode</label>
+            <input type="text" id="barcode" placeholder="Optional / unique" />
+          </div>
+
+          <div class="form-group">
+            <label for="supplier">Supplier</label>
+            <input type="text" id="supplier" placeholder="Optional" />
+          </div>
+        </div>
+
+        <p id="product-form-error" class="form-error" role="alert"></p>
+
+        <div class="modal-actions">
+          <button type="button" id="product-delete-btn" class="btn btn-secondary" hidden>Delete</button>
+          <div class="spacer"></div>
+          <button type="button" id="product-cancel-btn" class="btn btn-ghost">Cancel</button>
+          <button type="submit" id="product-save-btn" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Customer add/edit modal -->
+  <div id="customer-modal" class="modal" hidden>
+    <div class="modal-content glass-strong modal-lg">
+      <div class="modal-header">
+        <h3 id="customer-modal-title" class="modal-title">Add Customer</h3>
+        <button type="button" id="customer-modal-close" class="btn btn-ghost" aria-label="Close">×</button>
+      </div>
+      <form id="customer-form" class="modal-form">
+        <input type="hidden" id="customer_id" />
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="customer_name">Name</label>
+            <input type="text" id="customer_name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="customer_phone">Phone</label>
+            <input type="text" id="customer_phone" placeholder="Optional" />
+          </div>
+
+          <div class="form-group">
+            <label for="customer_email">Email</label>
+            <input type="email" id="customer_email" placeholder="Optional" />
+          </div>
+
+          <div class="form-group">
+            <label for="customer_loyalty">Loyalty Points</label>
+            <input type="number" id="customer_loyalty" min="0" step="1" value="0" />
+          </div>
+
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label for="customer_address">Address</label>
+            <textarea id="customer_address" rows="3" placeholder="Optional"></textarea>
+          </div>
+        </div>
+
+        <p id="customer-form-error" class="form-error" role="alert"></p>
+
+        <div class="modal-actions">
+          <div class="spacer"></div>
+          <button type="button" id="customer-cancel-btn" class="btn btn-ghost">Cancel</button>
+          <button type="submit" id="customer-save-btn" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- User add/edit modal (admin only) -->
+  <div id="user-modal" class="modal" hidden>
+    <div class="modal-content glass-strong modal-lg">
+      <div class="modal-header">
+        <h3 id="user-modal-title" class="modal-title">Add User</h3>
+        <button type="button" id="user-modal-close" class="btn btn-ghost" aria-label="Close">×</button>
+      </div>
+      <form id="user-form" class="modal-form">
+        <input type="hidden" id="user_id" />
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="user_username">Username</label>
+            <input type="text" id="user_username" required autocomplete="username" />
+          </div>
+          <div class="form-group">
+            <label for="user_password">Password</label>
+            <input type="password" id="user_password" autocomplete="new-password" />
+            <small id="user-password-hint" class="text-muted">Required for new users. Leave blank when editing to keep current password.</small>
+          </div>
+          <div class="form-group">
+            <label for="user_full_name">Full name</label>
+            <input type="text" id="user_full_name" placeholder="Optional" />
+          </div>
+          <div class="form-group">
+            <label for="user_role">Role</label>
+            <select id="user_role" required>
+              <option value="admin">Administrator</option>
+              <option value="manager">Manager</option>
+              <option value="cashier">Cashier</option>
+            </select>
+          </div>
+        </div>
+        <p id="user-form-error" class="form-error" role="alert"></p>
+        <div class="modal-actions">
+          <div class="spacer"></div>
+          <button type="button" id="user-cancel-btn" class="btn btn-ghost">Cancel</button>
+          <button type="submit" id="user-save-btn" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- cache-bust to ensure latest JS loads -->
+  <script src="js/api.js?v=20260320"></script>
+  <script src="js/theme.js?v=20260322"></script>
+  <script src="js/auth.js?v=20260402"></script>
+  <script src="js/app.js?v=20260402"></script>
+  <script src="js/pos.js?v=20260329"></script>
+  <script src="js/products.js?v=20260320"></script>
+  <script src="js/customers.js?v=20260317"></script>
+  <script src="js/sales.js?v=20260317"></script>
+  <script src="js/inventory.js?v=20260317"></script>
+  <script src="js/users.js?v=20260318"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+  <script src="js/pos-charts.js?v=20260330"></script>
+  <script src="js/reports.js?v=20260322"></script>
+</body>
+</html>

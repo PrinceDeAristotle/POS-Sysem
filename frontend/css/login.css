@@ -1,0 +1,112 @@
+/* When logged in, hide login screen completely */
+body.logged-in #login-screen {
+  display: none !important;
+}
+
+.login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: transparent;
+}
+
+.login-glass {
+  width: 100%;
+  max-width: 400px;
+  padding: 2.25rem;
+  background:
+    linear-gradient(135deg, rgba(245, 197, 66, 0.14), rgba(255, 255, 255, 0.04)),
+    var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow), var(--glass-shadow-gold), var(--glass-inset);
+}
+
+.login-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  text-align: center;
+  letter-spacing: 0.2px;
+}
+
+.login-subtitle {
+  margin: 0 0 0.5rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.login-hint {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+.login-hint strong {
+  color: var(--color-gold);
+}
+
+.password-wrap {
+  position: relative;
+}
+.password-wrap input {
+  padding-right: 2.75rem;
+}
+.password-toggle {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s, background 0.2s;
+}
+.password-toggle:hover {
+  color: var(--color-gold);
+  background: var(--color-gold-light);
+}
+.password-toggle .icon-eye-closed,
+.password-toggle .icon-eye-open {
+  position: absolute;
+}
+.password-toggle[aria-pressed="true"] .icon-eye-open {
+  display: none;
+}
+.password-toggle[aria-pressed="true"] .icon-eye-closed {
+  display: block !important;
+}
+.password-toggle .icon-eye-closed {
+  display: none;
+}
+
+.login-form .btn-block {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+}
+
+.login-error {
+  margin: 1rem 0 0;
+  color: #e57373;
+  font-size: 0.9rem;
+  text-align: center;
+  min-height: 1.25rem;
+}
+
+.login-error:empty {
+  display: none;
+}
