@@ -135,16 +135,16 @@ async function loadProductSearch(q) {
     productList.innerHTML = list.length === 0
       ? '<p class="text-muted">No products found</p>'
       : list.map(p => {
-          const q = parseInt(p.quantity, 10) || 0;
-          const stockClass = q <= 0 ? 'stock-out' : (q < 10 ? 'stock-low' : 'stock-ok');
-          const stockText = q <= 0 ? 'Out of stock' : `${q} available`;
-          return `
+        const q = parseInt(p.quantity, 10) || 0;
+        const stockClass = q <= 0 ? 'stock-out' : (q < 10 ? 'stock-low' : 'stock-ok');
+        const stockText = q <= 0 ? 'Out of stock' : `${q} available`;
+        return `
           <div class="product-card ${q <= 0 ? 'product-unavailable' : ''}" data-id="${p.product_id}" data-name="${p.product_name}" data-price="${p.price}" data-qty="${p.quantity}">
             <div class="name">${p.product_name}</div>
             <div class="price">${formatMoney(p.price)}</div>
             <div class="qty stock-line ${stockClass}">${stockText}</div>
           </div>`;
-        }).join('');
+      }).join('');
 
     productList.querySelectorAll('.product-card').forEach(card => {
       card.addEventListener('click', () => {
@@ -199,7 +199,7 @@ btnCheckout.addEventListener('click', async () => {
   const taxRate = parseFloat(cartTaxRate.value) || 0;
   const items = cart.map(i => ({ product_id: i.product_id, quantity: i.quantity, price: i.price }));
   const total = parseFloat(cartTotal.textContent) || 0;
-  
+
   const processSale = async (reference = null) => {
     try {
       let payments = undefined;
@@ -248,13 +248,13 @@ btnCheckout.addEventListener('click', async () => {
       }
       const handler = PaystackPop.setup({
         key: config.paystackPublicKey,
-        email: 'customer@possystem.local', // Optionally replace with actual customer email if available
+        email: 'customer_possystem@gmail.com', // Optionally replace with actual customer email if available
         amount: total * 100, // Amount in lowest denomination
-        currency: 'NGN',
-        callback: function(response) {
+        currency: 'GHS',
+        callback: function (response) {
           processSale(response.reference);
         },
-        onClose: function() {
+        onClose: function () {
           alert('Transaction cancelled.');
         }
       });
