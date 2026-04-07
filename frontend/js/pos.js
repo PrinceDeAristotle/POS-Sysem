@@ -199,39 +199,72 @@ btnCheckout.addEventListener('click', async () => {
   const taxRate = parseFloat(cartTaxRate.value) || 0;
   const items = cart.map(i => ({ product_id: i.product_id, quantity: i.quantity, price: i.price }));
   const total = parseFloat(cartTotal.textContent) || 0;
-  try {
-    let payments = undefined;
-    let cash_received = undefined;
-    if (paymentMethod.value === 'cash') {
-      cash_received = parseFloat(cashReceived.value) || 0;
-      if (cash_received < total) {
-        alert('Cash received is less than the total amount.');
+  
+  const processSale = async (reference = null) => {
+    try {
+      let payments = undefined;
+      let cash_received = undefined;
+      if (paymentMethod.value === 'cash') {
+        cash_received = parseFloat(cashReceived.value) || 0;
+        if (cash_received < total) {
+          alert('Cash received is less than the total amount.');
+          return;
+        }
+        payments = [{ method: 'cash', amount: total, cash_received }];
+      } else if (paymentMethod.value === 'mobile_money' && reference) {
+        payments = [{ method: 'mobile_money', amount: total, reference }];
+      }
+      const result = await api('/sales', {
+        method: 'POST',
+        body: JSON.stringify({
+          items,
+          discount_amount: discount,
+          tax_rate: taxRate,
+          payment_method: paymentMethod.value,
+          payments,
+        }),
+      });
+      const sale = await api('/sales/' + result.sale_id);
+      receiptContent.textContent = formatReceipt(sale);
+      receiptModal.hidden = false;
+      cart = [];
+      cartDiscount.value = 0;
+      cartTaxRate.value = 0;
+      if (cashReceived) cashReceived.value = 0;
+      renderCart();
+      loadProductSearch(barcodeInput.value.trim());
+      if (typeof window.refreshPosCharts === 'function') window.refreshPosCharts();
+    } catch (err) {
+      alert(err.error || 'Checkout failed.');
+    }
+  };
+
+  if (paymentMethod.value === 'mobile_money') {
+    try {
+      const config = await api('/config');
+      if (!config.paystackPublicKey) {
+        alert('Paystack Public Key is not configured. Please check backend environment.');
         return;
       }
-      payments = [{ method: 'cash', amount: total, cash_received }];
+      const handler = PaystackPop.setup({
+        key: config.paystackPublicKey,
+        email: 'customer@possystem.local', // Optionally replace with actual customer email if available
+        amount: total * 100, // Amount in lowest denomination
+        currency: 'NGN',
+        callback: function(response) {
+          processSale(response.reference);
+        },
+        onClose: function() {
+          alert('Transaction cancelled.');
+        }
+      });
+      handler.openIframe();
+    } catch (err) {
+      alert('Failed to initialize payment gateway.');
+      console.error(err);
     }
-    const result = await api('/sales', {
-      method: 'POST',
-      body: JSON.stringify({
-        items,
-        discount_amount: discount,
-        tax_rate: taxRate,
-        payment_method: paymentMethod.value,
-        payments,
-      }),
-    });
-    const sale = await api('/sales/' + result.sale_id);
-    receiptContent.textContent = formatReceipt(sale);
-    receiptModal.hidden = false;
-    cart = [];
-    cartDiscount.value = 0;
-    cartTaxRate.value = 0;
-    if (cashReceived) cashReceived.value = 0;
-    renderCart();
-    loadProductSearch(barcodeInput.value.trim());
-    if (typeof window.refreshPosCharts === 'function') window.refreshPosCharts();
-  } catch (err) {
-    alert(err.error || 'Checkout failed.');
+  } else {
+    processSale();
   }
 });
 

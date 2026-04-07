@@ -33,6 +33,13 @@ app.get('/api/health', async (req, res) => {
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
+// Config endpoint exposing public variables
+app.get('/api/config', (req, res) => {
+  res.json({
+    paystackPublicKey: process.env.PAYSTACK_PUBLIC_KEY || ''
+  });
+});
+
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
